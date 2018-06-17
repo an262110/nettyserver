@@ -26,31 +26,31 @@ public class HK5300 implements BaseAction {
 
 	@Override
 	public byte[] createSendInfo(ChannelHandlerContext ctx, Object msg) throws Exception {
-		
-		 RequestObject ob=(RequestObject)msg;
-         Map data=ob.getData();
-         int gunNo=(Integer)data.get("GUN_NO");//枪号
-         
-	     byte[] sendData=buildData(gunNo);
-	     byte[] ret= ParsePackage.buildHeader(5301, sendData);
-	     
-	     HKLogUtils.info("=================================发送的数据=======================");
-	     HKLogUtils.info(ISOUtil.hexString(ret));
-	     
-	     ByteBuf resp= Unpooled.copiedBuffer(ret);
-		 ctx.writeAndFlush(resp);
-		         
-				return null;
-			}
-			
-			private byte[] buildData(int gunNo) throws UnsupportedEncodingException{
-				//DATA 200 ascii
-				byte[] val=new byte[2];
-				val[0]=(byte) ((0 >>>0) & 0xff);
-				val[1]=(byte) ((gunNo >>>0) & 0xff);
-				
-			    return val;
-			}
+
+		RequestObject ob=(RequestObject)msg;
+		Map data=ob.getData();
+		int gunNo=(Integer)data.get("GUN_NO");//枪号
+
+		byte[] sendData=buildData(gunNo);
+		byte[] ret= ParsePackage.buildHeader(5301, sendData);
+
+		HKLogUtils.info("=================================发送的数据=======================");
+		HKLogUtils.info(ISOUtil.hexString(ret));
+
+		ByteBuf resp= Unpooled.copiedBuffer(ret);
+		ctx.writeAndFlush(resp);
+
+		return null;
+	}
+
+	private byte[] buildData(int gunNo) throws UnsupportedEncodingException{
+		//DATA 200 ascii
+		byte[] val=new byte[2];
+		val[0]=(byte) ((0 >>>0) & 0xff);
+		val[1]=(byte) ((gunNo >>>0) & 0xff);
+
+		return val;
+	}
 
 }
 

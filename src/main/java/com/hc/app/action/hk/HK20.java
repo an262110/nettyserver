@@ -21,40 +21,40 @@ public class HK20 implements BaseAction {
 	@Override
 	public byte[] createSendInfo(ChannelHandlerContext ctx, Object msg) throws Exception {
 		// TODO Auto-generated method stub
-		        
-             RequestObject ob=(RequestObject)msg;
-             Map data=ob.getData();
-	       
-	         byte[] sendData=buildData();
-	         byte[] ret= ParsePackage.buildHeader(0,sendData.length , 21, buildData());
-	         String pileNo=(String)data.get("SN");
-	         chargePileServiceImpl.addHk20(data);
-	         
-	         if(chargePileServiceImpl.countByPileNo(pileNo)==1){
-	        //跟新充电桩的状态
-				
-			 chargePileServiceImpl.updateStatus(pileNo,"08","0");//充电桩状态01 空闲 02 告警 03空闲 04充电中 05 完成 
-				                                                //06 预约 07 等待 
-				                                                //00离线 08 签单 09 交换密钥
-			 chargePileServiceImpl.updateGunStatus(pileNo,"08");
-	         }
-	         HKLogUtils.info("=================================发送的数据=======================");
-	         HKLogUtils.info(ISOUtil.hexString(ret));
-	         
-	         ByteBuf resp= Unpooled.copiedBuffer(ret);
-	 		 ctx.writeAndFlush(resp);
-         
+
+		RequestObject ob=(RequestObject)msg;
+		Map data=ob.getData();
+
+		byte[] sendData=buildData();
+		byte[] ret= ParsePackage.buildHeader(0,sendData.length , 21, buildData());
+		String pileNo=(String)data.get("SN");
+		chargePileServiceImpl.addHk20(data);
+
+		if(chargePileServiceImpl.countByPileNo(pileNo)==1){
+			//跟新充电桩的状态
+
+			chargePileServiceImpl.updateStatus(pileNo,"08","0");//充电桩状态01 空闲 02 告警 03空闲 04充电中 05 完成
+			//06 预约 07 等待
+			//00离线 08 签单 09 交换密钥
+			chargePileServiceImpl.updateGunStatus(pileNo,"08");
+		}
+		HKLogUtils.info("=================================发送的数据=======================");
+		HKLogUtils.info(ISOUtil.hexString(ret));
+
+		ByteBuf resp= Unpooled.copiedBuffer(ret);
+		ctx.writeAndFlush(resp);
+
 		return null;
 	}
-	
+
 	private byte[] buildData() throws UnsupportedEncodingException{
 		//DATA 200 ascii
 		byte[] val="20000000".getBytes("ascii");
-	    return val;
+		return val;
 	}
 
-	
-	
-	
+
+
+
 
 }

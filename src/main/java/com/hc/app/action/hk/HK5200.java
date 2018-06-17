@@ -29,43 +29,43 @@ public class HK5200 implements BaseAction {
 	private ChargePileService chargePileServiceImpl;
 	@Override
 	public byte[] createSendInfo(ChannelHandlerContext ctx, Object msg) throws Exception {
-		
+
 		RequestObject ob=(RequestObject)msg;
-        Map data=ob.getData();
-        
-        String pileNo=(String)data.get("SN");
-        
+		Map data=ob.getData();
+
+		String pileNo=(String)data.get("SN");
+
 		int retCode=1;
-        if(chargePileServiceImpl.countByPileNo(pileNo)==1){
+		if(chargePileServiceImpl.countByPileNo(pileNo)==1){
 			retCode=0;
-			
-			   
-		    //跟新充电桩的状态
-		        
-           chargePileServiceImpl.updateStatus(pileNo,"09","0");//充电桩状态01 空闲 02 告警 03空闲 04充电中 05 完成 
-				                                                //06 预约 07 等待 
-           chargePileServiceImpl.updateGunStatus(pileNo,"09");	                                                //00离线 08 签单 09 交换密钥
+
+
+			//跟新充电桩的状态
+
+			chargePileServiceImpl.updateStatus(pileNo,"09","0");//充电桩状态01 空闲 02 告警 03空闲 04充电中 05 完成
+			//06 预约 07 等待
+			chargePileServiceImpl.updateGunStatus(pileNo,"09");	                                                //00离线 08 签单 09 交换密钥
 		}
-     
-			 		
-	    byte[] sendData=buildData(retCode);
-	    byte[] ret= ParsePackage.buildHeader(5201, sendData);
-		
-	    chargePileServiceImpl.addHk5200(data);
-	   HKLogUtils.info("=================================发送的数据=======================");
-	   HKLogUtils.info(ISOUtil.hexString(ret));
-				         
-	   ByteBuf resp= Unpooled.copiedBuffer(ret);
-	   ctx.writeAndFlush(resp);
-		         
-				return null;
-			}
-			
-			private byte[] buildData(int retCode) throws UnsupportedEncodingException{
-				//DATA 200 ascii
-				byte[] val=new byte[1];
-				val[0]=(byte) ((retCode >>>0) & 0xff);
-			    return val;
-			}
+
+
+		byte[] sendData=buildData(retCode);
+		byte[] ret= ParsePackage.buildHeader(5201, sendData);
+
+		chargePileServiceImpl.addHk5200(data);
+		HKLogUtils.info("=================================发送的数据=======================");
+		HKLogUtils.info(ISOUtil.hexString(ret));
+
+		ByteBuf resp= Unpooled.copiedBuffer(ret);
+		ctx.writeAndFlush(resp);
+
+		return null;
+	}
+
+	private byte[] buildData(int retCode) throws UnsupportedEncodingException{
+		//DATA 200 ascii
+		byte[] val=new byte[1];
+		val[0]=(byte) ((retCode >>>0) & 0xff);
+		return val;
+	}
 
 }
