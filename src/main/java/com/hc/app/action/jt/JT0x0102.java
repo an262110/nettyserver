@@ -28,7 +28,7 @@ public class JT0x0102 implements JTActionI {
 		if (debug) {
 			JTLogUtils.info("收到报文:" + megJT.bytesToHexString(meg));
 			megJT.JTwriteBytesToFile(meg, 0);
-			megJT.JTwriteBytesToFile(bytes, 1);	
+			megJT.JTwriteBytesToFile(bytes, 1);
 			JTLogUtils.info("发送报文"+megJT.bytesToHexString(bytes));
 		} else {
 			Map<String, String> map = megJT.getMap();
@@ -44,7 +44,7 @@ public class JT0x0102 implements JTActionI {
 		}
 		ByteBuf byteBuf = Unpooled.copiedBuffer(bytes);
 		ctx.writeAndFlush(byteBuf);
-        try {
+		try {
 			data_persistence(megJT);
 		} catch (Exception e) {
 			JTLogUtils.error(e.getMessage());

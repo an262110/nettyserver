@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import java.util.Map;
 
 /**
- * 
+ *
  *<p>title :</p>
  *<p>Description :Charge费率上报 </p>
  *<p>Company : 广州爱电牛科技有限公司</p>
@@ -36,7 +36,7 @@ public class JT0x0109 implements JTActionI {
 			megJT.JTwriteBytesToFile(bytes, 0);
 		}else{}
 		ByteBuf byteBuf = Unpooled.copiedBuffer(bytes);
-		ctx.writeAndFlush(byteBuf);       
+		ctx.writeAndFlush(byteBuf);
 	}
 
 

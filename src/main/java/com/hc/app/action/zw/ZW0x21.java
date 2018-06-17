@@ -15,9 +15,9 @@ import java.util.Map;
 
 /**
  * 下发充电请求：平台回复
- * 
+ *
  * @author zc
- * 
+ *
  */
 
 @Component("ZW0x21")
@@ -29,11 +29,11 @@ public class ZW0x21 implements ZWActionI {
 
 	@Override
 	public BodyI receive_or_send(ChannelHandlerContext ctx, Head head,
-                                 byte[] msg, boolean is_Debug) {
+								 byte[] msg, boolean is_Debug) {
 		Body0x21 body = new Body0x21(msg);
-		
+
 		// 为true 调试报文用 (byte)0x04 自动充满
-		if(is_Debug){ 
+		if(is_Debug){
 			head.setHead8_1(new byte[]{0x10});
 			byte b = 0x04;
 			Body0x10 body10 = new Body0x10(body.getBody1_1(),b,body.getBody2_10());
@@ -41,10 +41,10 @@ public class ZW0x21 implements ZWActionI {
 			NettyChannelMap.get("1001").writeAndFlush(meg.getSendBuf());
 			return body;
 		}
-		
+
 		Map<String, String> bMap = body.bytesToMap();
-        Map<String, String> hMap = head.bytesToMap();
-        
+		Map<String, String> hMap = head.bytesToMap();
+
 		String order_id = bMap.get("body2_10");
 		String state = bMap.get("body3_1");
 
@@ -66,10 +66,10 @@ public class ZW0x21 implements ZWActionI {
 				chargeOrderServiceImpl.updateInfo(paraMap);
 			} catch (Exception e) {
 				ZWLogUtils.info("充电请求返回21错误码码更新失败："+state);
-	  			return body;
+				return body;
 			}
 		}
-		
+
 		//0x10的业务处理，下发充电开启指令
 		Body0x10 body_0x10 = new Body0x10(body.getBody1_1(), (byte) 0x04,body.getBody2_10());// 拼发送数据
 		head.setHead8_1(new byte[]{0x10});
@@ -82,12 +82,12 @@ public class ZW0x21 implements ZWActionI {
 	@Override
 	public boolean business_todb(Meg meg, boolean is_Debug) {
 
-		 ZWLogUtils.info("写入数据库>>>>>>meg="+meg);
-		 ZWLogUtils.info("写入数据库>>>>>>meg.bytesToMap()="+meg.bytesToMap());
-		 if(is_Debug){
-	    	//zwServiceImpl.addBody0x21(meg.bytesToMap());
-	    	return true;
-		 }
+		ZWLogUtils.info("写入数据库>>>>>>meg="+meg);
+		ZWLogUtils.info("写入数据库>>>>>>meg.bytesToMap()="+meg.bytesToMap());
+		if(is_Debug){
+			//zwServiceImpl.addBody0x21(meg.bytesToMap());
+			return true;
+		}
 		return true;
 	}
 

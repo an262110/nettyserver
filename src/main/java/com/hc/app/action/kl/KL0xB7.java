@@ -193,7 +193,7 @@ public class KL0xB7 implements KLActionI {
     public static void main(String[] args) {
 
 
-     String c = "0000013812345678";
+        String c = "0000013812345678";
         test(c,2);
 
 

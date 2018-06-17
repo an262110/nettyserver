@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 
+ *
  *<p>title :平台停止指令返回</p>
  *<p>Description : </p>
  *<p>Company : 广州爱电牛科技有限公司</p>
@@ -26,7 +26,7 @@ import java.util.Map;
 public class ZW0x13 implements ZWActionI {
 	@Autowired
 	private ZWService zwServiceImpl;
-    @Autowired
+	@Autowired
 	private ChargeOrderService chargeOrderService;
 	@Override
 	public BodyI receive_or_send(ChannelHandlerContext ctx, Head head, byte[] msg, boolean is_Debug) {
@@ -34,11 +34,11 @@ public class ZW0x13 implements ZWActionI {
 		if(is_Debug){
 			return body;
 		}
-		
+
 		Map<String, String> bodyMap = body.bytesToMap();
-		
+
 		String charge_order_id = bodyMap.get("body2_10");
-		
+
 		Map params = new HashMap();
 		params.put("CHARGE_ORDER_ID", charge_order_id);
 		params.put("ORDER_STATE", "03");
@@ -50,7 +50,7 @@ public class ZW0x13 implements ZWActionI {
 			ZWLogUtils.error("充电结束13更改订单状态："+params);
 			return body;
 		}
-						
+
 		return body;
 	}
 
@@ -59,9 +59,9 @@ public class ZW0x13 implements ZWActionI {
 		ZWLogUtils.info("0x13写入数据库>>>>>>meg.bytesToMap()="+meg.bytesToMap());
 		if(is_Debug){
 			//zwServiceImpl.addBody0x13(meg.bytesToMap());
-		    return true;
+			return true;
 		}
-		
+
 		return true;
 	}
 

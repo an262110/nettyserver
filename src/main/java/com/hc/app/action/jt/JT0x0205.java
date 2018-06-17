@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 
+ *
  *<p>title :金霆报文业务处理</p>
  *<p>Description : Server操作指令</p>
  *<p>Company : 广州爱电牛科技有限公司</p>
@@ -65,80 +65,80 @@ public class JT0x0205 implements JTActionI {
 			try {
 				mapOrder = chargeOrderServiceImpl.searchOrderDetail(chargepile,"01");
 				retClient = "200\r\n";
-		        if(mapOrder == null){
-		       	 retClient = "300\r\n"; //订单不存在
-		       	 JTLogUtils.error("[300]订单不存在！");
-		       	 ByteBuf resp= Unpooled.copiedBuffer(retClient.getBytes());
-		    	 ctx.writeAndFlush(resp);
-		        }
-	      //充电桩序列号与枪号
-	        String  gunCode= mapOrder.get("GUN_CODE").toString();
-	       
-	        Map gunInfo = null;
-				gunInfo = chargePileServiceImpl.findByGunCode(gunCode);
-	        if(gunInfo==null){
-	        	retClient = "500\r\n"; //充电枪不存在
-	          	 JTLogUtils.error("[500]充电枪不存在！");
-	          	 ByteBuf resp= Unpooled.copiedBuffer(retClient.getBytes());
-	       	     ctx.writeAndFlush(resp);
-	        }
-	        //获取用户标识号(启动停止需要唯一)
-	        String charge_num_str = null;
-		
-				charge_num_str = chargeOrderServiceImpl.obtainUserSeq("dn_charge_order_seril");
-	        
-	        //int charge_num = Integer.valueOf(charge_num_str).intValue();
-	        
-	               
-	        String pileNo=(String)gunInfo.get("PILE_SERI");
-	        String gunNo=gunInfo.get("GUN_NO").toString();
-	        JTLogUtils.info("桩序列号："+pileNo);
-	        JTLogUtils.info("枪编号："+gunNo);
-	        
-	        Channel sc= NettyChannelMap.get(pileNo);
-			
-			if(sc!=null){
-				LogUtils.info("发送指令的连接通道：====="+sc.toString());
-				if(sc.isActive()||sc.isOpen()){
-					JTLogUtils.info("活动的连接！");
-				}else{
-					JTLogUtils.info("不活动的连接！");
+				if(mapOrder == null){
+					retClient = "300\r\n"; //订单不存在
+					JTLogUtils.error("[300]订单不存在！");
+					ByteBuf resp= Unpooled.copiedBuffer(retClient.getBytes());
+					ctx.writeAndFlush(resp);
 				}
-				byte[] bs = megJT.getBytes();
-				ByteBuf byteBuf = Unpooled.copiedBuffer(bs);
-				sc.writeAndFlush(byteBuf).addListener(new ChannelFutureListener() {
-					@Override
-					public void operationComplete(ChannelFuture arg0) throws Exception {
-						// TODO Auto-generated method stub
-						if(arg0.isSuccess()){
-							JTLogUtils.info("info>>>>>>>>>>>>>发送成功");
-							
-						}else{
-							JTLogUtils.info("info>>>>>>>>>>>>>发送失败");
-						}
+				//充电桩序列号与枪号
+				String  gunCode= mapOrder.get("GUN_CODE").toString();
+
+				Map gunInfo = null;
+				gunInfo = chargePileServiceImpl.findByGunCode(gunCode);
+				if(gunInfo==null){
+					retClient = "500\r\n"; //充电枪不存在
+					JTLogUtils.error("[500]充电枪不存在！");
+					ByteBuf resp= Unpooled.copiedBuffer(retClient.getBytes());
+					ctx.writeAndFlush(resp);
+				}
+				//获取用户标识号(启动停止需要唯一)
+				String charge_num_str = null;
+
+				charge_num_str = chargeOrderServiceImpl.obtainUserSeq("dn_charge_order_seril");
+
+				//int charge_num = Integer.valueOf(charge_num_str).intValue();
+
+
+				String pileNo=(String)gunInfo.get("PILE_SERI");
+				String gunNo=gunInfo.get("GUN_NO").toString();
+				JTLogUtils.info("桩序列号："+pileNo);
+				JTLogUtils.info("枪编号："+gunNo);
+
+				Channel sc= NettyChannelMap.get(pileNo);
+
+				if(sc!=null){
+					LogUtils.info("发送指令的连接通道：====="+sc.toString());
+					if(sc.isActive()||sc.isOpen()){
+						JTLogUtils.info("活动的连接！");
+					}else{
+						JTLogUtils.info("不活动的连接！");
 					}
-				});
-			}else {
-				
-	        	 JTLogUtils.error("[400]没有连接桩！");
-	        	 ByteBuf resp_400= Unpooled.copiedBuffer("400\r\n".getBytes());
-	     	     ctx.writeAndFlush(resp_400);
-	    	     //ctx.close();
-	        	 return;
-			}
-			
-			ByteBuf resp_200= Unpooled.copiedBuffer("200\r\n".getBytes());
-		     ctx.writeAndFlush(resp_200);
-		     //ctx.close();
-	        
-		    //更新订单表的用户标识号
+					byte[] bs = megJT.getBytes();
+					ByteBuf byteBuf = Unpooled.copiedBuffer(bs);
+					sc.writeAndFlush(byteBuf).addListener(new ChannelFutureListener() {
+						@Override
+						public void operationComplete(ChannelFuture arg0) throws Exception {
+							// TODO Auto-generated method stub
+							if(arg0.isSuccess()){
+								JTLogUtils.info("info>>>>>>>>>>>>>发送成功");
+
+							}else{
+								JTLogUtils.info("info>>>>>>>>>>>>>发送失败");
+							}
+						}
+					});
+				}else {
+
+					JTLogUtils.error("[400]没有连接桩！");
+					ByteBuf resp_400= Unpooled.copiedBuffer("400\r\n".getBytes());
+					ctx.writeAndFlush(resp_400);
+					//ctx.close();
+					return;
+				}
+
+				ByteBuf resp_200= Unpooled.copiedBuffer("200\r\n".getBytes());
+				ctx.writeAndFlush(resp_200);
+				//ctx.close();
+
+				//更新订单表的用户标识号
 				Map paramMap = new HashMap();
-				
+
 				paramMap.put("CHARGE_USERID_9", CHARGE_USERID);
 				paramMap.put("CHARGE_ORDER_ID", chargepile);
 				paramMap.put("POLICY_ID",gunInfo.get("POLICY_ID").toString());
-				
-					chargeOrderServiceImpl.updateInfo(paramMap);
+
+				chargeOrderServiceImpl.updateInfo(paramMap);
 				JTLogUtils.info("已更新用户标识到订单表 以及插入充电表"+chargepile +"标识号："+CHARGE_USERID);
 				Map chargeParams=new HashMap();
 				chargeParams.put("MESSAGE_ID",data.get("msgid"));
@@ -147,13 +147,13 @@ public class JT0x0205 implements JTActionI {
 				chargeParams.put("FACTORY_ID","0001");
 				chargeParams.put("PILE_SERI",pileNo);
 				chargeParams.put("GUN_NO",gunNo);
-				
-				
-					chargeHKServiceImpl.save(chargeParams);
-				} catch (Exception e) {
-					JTLogUtils.error(e.getMessage());
-				}
+
+
+				chargeHKServiceImpl.save(chargeParams);
+			} catch (Exception e) {
+				JTLogUtils.error(e.getMessage());
 			}
+		}
 	}
 
 	@Override
@@ -161,14 +161,14 @@ public class JT0x0205 implements JTActionI {
 		// TODO Auto-generated method stub
 
 	}
-	
+
 	private String getOrderNO() {
 		String charge_num_str;
 		try {
 			charge_num_str = JtService.findSeq();
 		} catch (Exception e) {
-		 JTLogUtils.error(e.getMessage());
-		 return null;
+			JTLogUtils.error(e.getMessage());
+			return null;
 		}
 		String CHARGE_USERID = CommonUtil.buildString(charge_num_str, 16);
 		return CHARGE_USERID;

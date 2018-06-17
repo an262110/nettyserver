@@ -24,26 +24,26 @@ public class ZW0xB1 implements ZWActionI {
 	private ZWService zwServiceImpl;
 	@Override
 	public BodyI receive_or_send(ChannelHandlerContext ctx, Head head,
-                                 byte[] msg, boolean is_Debug) {
+								 byte[] msg, boolean is_Debug) {
 		Body0xB1 body = new Body0xB1(msg);
 		ZWLogUtils.info("智网回复报文>>>>>>body="+body.getBody_hexstr());
 		//正常保存长连接 异常重新连接
 		NettyChannelMap.add("1001",(SocketChannel)ctx.channel());
 		ZWLogUtils.info("建立的连接>>>>>>="+ NettyChannelMap.get("1001"));
-                        
+
 		return body;
 	}
-	
+
 	@Override
 	public boolean business_todb(Meg meg, boolean is_Debug) {
-		
-	    ZWLogUtils.info("写入数据库>>>>>>meg="+meg);
-	    ZWLogUtils.info("写入数据库>>>>>>meg.bytesToMap()="+meg.bytesToMap());
-	    if(is_Debug){
-	    	//zwServiceImpl.addBody0xB0(meg.bytesToMap());
-	    	return true;
-	    }    
-				
+
+		ZWLogUtils.info("写入数据库>>>>>>meg="+meg);
+		ZWLogUtils.info("写入数据库>>>>>>meg.bytesToMap()="+meg.bytesToMap());
+		if(is_Debug){
+			//zwServiceImpl.addBody0xB0(meg.bytesToMap());
+			return true;
+		}
+
 		return true;
 	}
 

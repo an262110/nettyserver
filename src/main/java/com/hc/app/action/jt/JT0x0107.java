@@ -20,7 +20,7 @@ import java.util.Map;
 public class JT0x0107 implements JTActionI {
 	@Autowired
 	private ChargePileBillService chargePileBillServiceImpl;
-	
+
 	@Autowired
 	private ChargeOrderService chargeOrderServiceImpl;
 	@Autowired
@@ -40,43 +40,43 @@ public class JT0x0107 implements JTActionI {
 		}else{
 			String orderID = String.valueOf(data.get("data2_16"));
 			int gunNo = Integer.valueOf(String.valueOf(data.get("data3_1")));
-			
+
 			try{
-			 Map orderInfo=chargeOrderServiceImpl.findByOrderSeril(orderID);
-			 String orderId=(String)orderInfo.get("CHARGE_ORDER_ID");
-			 String orderState=(String)orderInfo.get("ORDER_STATE");
-			 
-			 int CHARGE_ELE_QUANTITY=Integer.valueOf(String.valueOf(data.get("CHARGE_QUANTITY")))*1000;//已充电量
-			 
-			 double cele=Double.valueOf(CHARGE_ELE_QUANTITY);
-				
+				Map orderInfo=chargeOrderServiceImpl.findByOrderSeril(orderID);
+				String orderId=(String)orderInfo.get("CHARGE_ORDER_ID");
+				String orderState=(String)orderInfo.get("ORDER_STATE");
+
+				int CHARGE_ELE_QUANTITY=Integer.valueOf(String.valueOf(data.get("CHARGE_QUANTITY")))*1000;//已充电量
+
+				double cele=Double.valueOf(CHARGE_ELE_QUANTITY);
+
 				cele=cele*1.05;
 				CHARGE_ELE_QUANTITY=new java.math.BigDecimal(cele).setScale(0,java.math.BigDecimal.ROUND_UP).intValue();
-			 if(!"04".equals(orderState)){
-				//计算费用
-				Map<String,Double> feeInfo= CaculateUtil.calculateFee(CHARGE_ELE_QUANTITY, orderInfo);
-				double servicePay =feeInfo.get("servicePay");//当前电费
-				double elePay=feeInfo.get("elePay");//当前服务费
-				
-			//订单状态更改为 03 充电结束
-			  Map paramMap = new HashMap();
-			  paramMap.put("ORDER_STATE", "03");
-			  paramMap.put("CHARGE_USERID_9", orderID);
-			  chargeOrderServiceImpl.updateInfoHk(paramMap); 
-			
-			  chargeOrderServiceImpl.singleCheckBill(orderId);//结算
-			 }else{
+				if(!"04".equals(orderState)){
+					//计算费用
+					Map<String,Double> feeInfo= CaculateUtil.calculateFee(CHARGE_ELE_QUANTITY, orderInfo);
+					double servicePay =feeInfo.get("servicePay");//当前电费
+					double elePay=feeInfo.get("elePay");//当前服务费
+
+					//订单状态更改为 03 充电结束
+					Map paramMap = new HashMap();
+					paramMap.put("ORDER_STATE", "03");
+					paramMap.put("CHARGE_USERID_9", orderID);
+					chargeOrderServiceImpl.updateInfoHk(paramMap);
+
+					chargeOrderServiceImpl.singleCheckBill(orderId);//结算
+				}else{
 					JTLogUtils.info("重复账单,重复结算!");
 				}
-			 
-			 chargePileBillServiceImpl.savehk(data);
+
+				chargePileBillServiceImpl.savehk(data);
 			}catch(Exception e){
 				JTLogUtils.error(e.getMessage());
-			}		
+			}
 		}
 		ByteBuf byteBuf = Unpooled.copiedBuffer(bytes);
 		ctx.writeAndFlush(byteBuf);
-        try {
+		try {
 			data_persistence(megJT);
 		} catch (Exception e) {
 			JTLogUtils.error(e.getMessage());

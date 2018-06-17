@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 
+ *
  *<p>title :</p>
  *<p>Description : charge状态指令</p>
  *<p>Company : 广州爱电牛科技有限公司</p>
@@ -44,8 +44,8 @@ public class JT0x0103 implements JTActionI {
 		byte[] bytes = megJT.getBytes();
 		if (debug) {
 			JTLogUtils.info("收到的报文>>>>>>>>>>>>>>>>>>>>>>" + megJT.bytesToHexString(meg));
-			megJT.JTwriteBytesToFile(meg, 1);		
-			megJT.JTwriteBytesToFile(bytes, 0);		
+			megJT.JTwriteBytesToFile(meg, 1);
+			megJT.JTwriteBytesToFile(bytes, 0);
 			JTLogUtils.info("发动的报文>>>>>>>>>>>>>>>>>>>>>>" + megJT.bytesToHexString(bytes));
 		} else {
 			JTLogUtils.info("当前的长连接>>>>>>>>>>>>>>>" + chargepile);

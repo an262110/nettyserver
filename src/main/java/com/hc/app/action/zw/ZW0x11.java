@@ -29,7 +29,7 @@ public class ZW0x11 implements ZWActionI {
 
 	@Override
 	public BodyI receive_or_send(ChannelHandlerContext ctx, Head head,
-                                 byte[] msg, boolean is_Debug) {
+								 byte[] msg, boolean is_Debug) {
 		Body0x11 body = new Body0x11(msg);
 		if(is_Debug){ // 为true 调试报文用
 			//不需要处理
@@ -37,13 +37,13 @@ public class ZW0x11 implements ZWActionI {
 			return body;
 		}
 		Map<String, String> bodyMap = body.bytesToMap();
-		
+
 		String order_id = (String) bodyMap.get("body5_10");
 		Map<String, String> paraMap = new HashMap<String, String>();
 		paraMap.put("CHARGE_ORDER_ID", order_id);
 		paraMap.put("START_CHARGE_TIME", "1");
 		paraMap.put("ORDER_STATE", "02");
-		
+
 		String charge_gun=bodyMap.get("body1_1");
 		if("00".equals(charge_gun)){
 			charge_gun="1";
@@ -55,24 +55,24 @@ public class ZW0x11 implements ZWActionI {
 			chargeOrderServiceImpl.updateInfo(paraMap);
 		} catch (Exception e) {
 			ZWLogUtils.info("充电启动返回11更新失败："+paraMap);
-  			return body;
+			return body;
 		}
-                       
+
 		return body;
 	}
-	
+
 	@Override
 	public boolean business_todb(Meg meg, boolean is_Debug) {
-		
-	    ZWLogUtils.info("写入数据库>>>>>>meg="+meg);
-	    ZWLogUtils.info("0x11写入数据库>>>>>>meg.bytesToMap()="+meg.bytesToMap());
+
+		ZWLogUtils.info("写入数据库>>>>>>meg="+meg);
+		ZWLogUtils.info("0x11写入数据库>>>>>>meg.bytesToMap()="+meg.bytesToMap());
 		if(is_Debug){
-		//	zwServiceImpl.addBody0x11(meg.bytesToMap());
+			//	zwServiceImpl.addBody0x11(meg.bytesToMap());
 
 
-		    return true;
+			return true;
 		}
-		
+
 		return true;
 	}
 

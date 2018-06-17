@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 
+ *
  * <p>
  * title :金霆报文处理
  * </p>
@@ -32,7 +32,7 @@ import java.util.Map;
  * <p>
  * Company : 广州爱电牛科技有限公司
  * </p>
- * 
+ *
  * @date 2017年3月21日
  * @author 小吴
  */

@@ -32,7 +32,7 @@ public class KL0xA1 implements KLActionI {
 
 
 
-//		ByteBuf buf =(ByteBuf)msg;        
+//		ByteBuf buf =(ByteBuf)msg;
 //        byte[] req=new byte[buf.readableBytes()];
 //        buf.readBytes(req);
         /**
@@ -320,7 +320,7 @@ public class KL0xA1 implements KLActionI {
         //发送给客户端
         ByteBuf resp = Unpooled.copiedBuffer(end_send);
         ctx.writeAndFlush(resp);
-		
+
         return null;
     }
 

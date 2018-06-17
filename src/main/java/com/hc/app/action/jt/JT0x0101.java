@@ -14,8 +14,8 @@ import java.util.Map;
 
 @Component("JT0x0101")
 public class JT0x0101 implements JTActionI {
-    @Autowired
-    private JtService jtService;
+	@Autowired
+	private JtService jtService;
 	@Override
 	public void receive_send_data(ChannelHandlerContext ctx, byte[] meg, boolean debug) {
 		Data_0101 data_0101 = new Data_0101(meg);
@@ -40,8 +40,8 @@ public class JT0x0101 implements JTActionI {
 
 	@Override
 	public void data_persistence(MegJT meg) throws Exception {
-		 Map map = meg.getMap();
-		 jtService.addLogin(map);
+		Map map = meg.getMap();
+		jtService.addLogin(map);
 	}
 
 }

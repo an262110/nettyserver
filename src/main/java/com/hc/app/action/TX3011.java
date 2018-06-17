@@ -18,7 +18,7 @@ public class TX3011 implements BaseAction {
 	public byte[] createSendInfo(ChannelHandlerContext ctx, Object msg) throws Exception {
 		byte[] req=(byte[])msg;
 		ISOMsg sendMsg= CommonUtil.parsePackage(req);
-		
+
 		//更新充电表
 		String charge_userid = sendMsg.getString(9); //用户标识
 		Map mapCharge = chargeOrderServiceImpl.searchDnChargeDetail(charge_userid);
@@ -38,9 +38,9 @@ public class TX3011 implements BaseAction {
 		}
 		//01 充电 02 停止 实时更新订单状态
 		Map paramMap = new HashMap();
-		if("02".equals(mapCharge.get("CHARGE_TYPE_4"))){			
-			//订单状态更改为 03 充电结束			
-			paramMap.put("ORDER_STATE", "03");			
+		if("02".equals(mapCharge.get("CHARGE_TYPE_4"))){
+			//订单状态更改为 03 充电结束
+			paramMap.put("ORDER_STATE", "03");
 			paramMap.put("END_CHARGE_TIME", "1");
 		}else {
 			paramMap.put("START_CHARGE_TIME", "1");

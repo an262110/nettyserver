@@ -32,7 +32,7 @@ public class JT0x0108 implements JTActionI {
 			megJT.JTwriteBytesToFile(toBytes, 0);
 		}else{}
 		ByteBuf byteBuf = Unpooled.copiedBuffer(bytes);
-		ctx.writeAndFlush(byteBuf);       
+		ctx.writeAndFlush(byteBuf);
 	}
 
 	@Override
