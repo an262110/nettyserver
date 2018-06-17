@@ -11,8 +11,8 @@ public class HK6501 implements BaseAction {
 	public byte[] createSendInfo(ChannelHandlerContext ctx, Object msg) throws Exception {
 		// TODO Auto-generated method stub
 		RequestObject ob=(RequestObject)msg;
-		
-         return null;
+
+		return null;
 	}
-  
+
 }
